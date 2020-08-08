@@ -390,7 +390,7 @@ int object_value_real(const struct object *obj, int qty)
 							/* With V combat, brands are worth more on things with big dice 
 							 * With O combat, weapons with big dice are just better, so
 							 * anything that enhances attacks is worth more on them */
-							if ((tval_is_weapon(obj)) || (div == 10))
+							if ((tval_is_melee_weapon(obj)) || (div == 10))
 							{
 								bonus *= ((obj->dd + 1) * (obj->ds));
 								bonus /= 24;                                           
@@ -410,7 +410,7 @@ int object_value_real(const struct object *obj, int qty)
 							/* With V combat, slays are worth more on things with big dice 
 							 * With O combat, weapons with big dice are just better, so
 							 * anything that enhances attacks is worth more on them */
-							if ((tval_is_weapon(obj)) || (div == 10))
+							if ((tval_is_melee_weapon(obj)) || (div == 10))
 							{
 								bonus *= ((obj->dd + 1) * (obj->ds));
 								bonus /= 24;
