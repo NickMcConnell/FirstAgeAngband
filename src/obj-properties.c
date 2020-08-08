@@ -292,7 +292,7 @@ int property_cost(struct obj_property *prop, int value, bool price)
 {
 	if (price) {
 		return prop->price_constant + prop->price_linear * value +
-			prop->price_square * value * value;
+			prop->price_square * value * ((value > 0) ? value : (0 - value));
 	}
 
 	return prop->design_constant + prop->design_linear * value +
