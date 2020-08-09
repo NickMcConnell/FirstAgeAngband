@@ -1413,15 +1413,19 @@ void prepare_next_level(struct chunk **c, struct player *p)
 				cave_store(*c, prev_name, false, true);
 				cave_store(p->cave, prev_name, true, true);
 			}
-			else if (!player->place)
+			else if (!p->place)
 			/* Paranoia - try to catch unusual exits from Arena
 			 * Ideally unusual exits never happen and this code is unnecessary */
 			{
-				player->upkeep->arena_level = false;
-				if (!player->last_place) player->last_place = player->home; /* paranoia */
-				player_change_place(player, player->last_place);
-				player->upkeep->arena_level = true;				
-				player->upkeep->health_who = NULL; /* Suppress "defeated" message for unusual exit */
+				p->upkeep->arena_level = false;
+				if (!p->last_place) 
+				{
+					p->last_place = p->home; /* paranoia */
+					persist = OPT(p, birth_levels_persist);
+				}
+				player_change_place(p, p->last_place);
+				p->upkeep->arena_level = true;				
+				p->upkeep->health_who = NULL; /* Suppress "defeated" message for unusual exit */
 				my_strcpy(prev_name, level_name(&world->levels[p->last_place]),
 				  sizeof(prev_name));
 				my_strcpy(new_name, level_name(&world->levels[p->place]), sizeof(new_name));
