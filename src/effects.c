@@ -1535,7 +1535,7 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 				}
 
 				/* Check for replacement */
-				if (point < num_recall_points + 1) {
+				if ((point < num_recall_points + 1) && (place)) {
 					player->recall[point] = place;
 				}
 
