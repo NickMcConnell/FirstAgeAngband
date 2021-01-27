@@ -21,9 +21,10 @@ jobs:
       - name: Build
         run: |
           ./autogen.sh
-          env CFLAGS=-DPRIVATE_USER_PATH=\\\"./lib/user\\\" ./configure --with-no-install
+          env CFLAGS=-DPRIVATE_USER_PATH=\\\"./lib/user\\\" ./configure --with-no-install --enable-test
           make
           make tests
+          ./run-tests
 
   x11:
     name: X11
