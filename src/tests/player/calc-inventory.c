@@ -6,6 +6,7 @@
 #include "cave.h"
 #include "cmd-core.h"
 #include "game-world.h"
+#include "generate.h"
 #include "init.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
