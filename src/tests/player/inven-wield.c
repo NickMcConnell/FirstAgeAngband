@@ -7,6 +7,7 @@
 #include "cmd-core.h"
 #include "effects.h"
 #include "game-world.h"
+#include "generate.h"
 #include "init.h"
 #include "obj-curse.h"
 #include "obj-gear.h"
