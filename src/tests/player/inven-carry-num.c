@@ -52,7 +52,11 @@ int setup_tests(void **state) {
 	cmdq_push(CMD_CHOOSE_RACE);
 	cmd_set_arg_choice(cmdq_peek(), "choice", 0);
 	cmdq_push(CMD_CHOOSE_CLASS);
-	cmd_set_arg_choice(cmdq_peek(), "choice", 0);
+	/*
+	 * A druid starts with three items and so plays nicely with the
+	 * reduced pack size.
+	 */
+	cmd_set_arg_choice(cmdq_peek(), "choice", 2);
 	cmdq_push(CMD_ROLL_STATS);
 	cmdq_push(CMD_NAME_CHOICE);
 	cmd_set_arg_string(cmdq_peek(), "name", "Tester");
