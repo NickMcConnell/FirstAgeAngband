@@ -33,6 +33,8 @@ int setup_tests(void **state) {
 
 	set_file_paths();
 	init_angband();
+	/* Necessary for creating the randart file. */
+	create_needed_dirs();
 
 	/*
 	 * Use a smaller than normal pack and quiver so it is less tedious to
