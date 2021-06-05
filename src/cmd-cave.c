@@ -1061,7 +1061,7 @@ void do_cmd_disarm(struct command *cmd)
  * one time,  but an old trap can be disarmed to free up equipment for a new
  * trap. -LM-
  */
-void do_cmd_set_trap(struct loc grid)
+static void do_cmd_set_trap(struct loc grid)
 {
 	int max_traps =	1 + ((player->lev >= 25) ? 1 : 0);
 

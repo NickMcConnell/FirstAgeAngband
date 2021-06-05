@@ -49,7 +49,7 @@ int num_wild_vaults;
 /**
  * Set the number of wilderness vaults
  */
-void set_num_vaults(struct chunk *c)
+static void set_num_vaults(struct chunk *c)
 {
 	int max = 2;
 	num_wild_vaults = 0;
@@ -804,7 +804,7 @@ static void mtn_connect(struct chunk *c, struct loc grid1, struct loc grid2)
 /**
  * Attempt to place a web of the required type
  */
-bool place_web(struct chunk *c, struct player *p, const char *type)
+static bool place_web(struct chunk *c, struct player *p, const char *type)
 {
 	struct vault *v;
 	int i;

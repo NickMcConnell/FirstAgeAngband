@@ -389,7 +389,7 @@ static void recharge_objects(void)
 /**
  * Remove light-sensitive monsters from sunlit areas
  */
-void sun_banish(void)
+static void sun_banish(void)
 {
 	bool some_gone = false;
 	struct monster *mon;
