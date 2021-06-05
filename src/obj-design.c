@@ -3300,19 +3300,19 @@ static void haggle_till_done(struct artifact *art, struct object *obj)
 
 	/* Frequently neaten bonuses to Armour Class, Skill, and Deadliness. */
 	for (i = 0; i < 3; i++) {
-		s16b *bonus = art ? &art->to_a : &obj->to_a;
+		s16b *bonus_chg = art ? &art->to_a : &obj->to_a;
 		if (i == 1) { 
-			bonus = art ? &art->to_h : &obj->to_h;
+			bonus_chg = art ? &art->to_h : &obj->to_h;
 		}
 		if (i == 2) { 
-			bonus = art ? &art->to_d : &obj->to_d;
+			bonus_chg = art ? &art->to_d : &obj->to_d;
 		}
-		if (((*bonus) % 5 == 4) && one_in_(2)) {
-			(*bonus)++;
-		} else if (((*bonus) % 5 == 1) && one_in_(2)) {
-			(*bonus)--;
-		} else if (((*bonus) % 2 == 1) && !one_in_(4)) {
-			(*bonus)++;
+		if (((*bonus_chg) % 5 == 4) && one_in_(2)) {
+			(*bonus_chg)++;
+		} else if (((*bonus_chg) % 5 == 1) && one_in_(2)) {
+			(*bonus_chg)--;
+		} else if (((*bonus_chg) % 2 == 1) && !one_in_(4)) {
+			(*bonus_chg)++;
 		}
 	}
 }
