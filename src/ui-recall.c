@@ -22,6 +22,7 @@
 #include "init.h"
 #include "ui-menu.h"
 #include "ui-output.h"
+#include "ui-recall.h"
 
 /**
  * Choice of recall point (or nowhere)
