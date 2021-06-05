@@ -120,7 +120,7 @@ void do_cmd_move_house(struct command *cmd)
 /**
  * Get the direction a path is heading
  */
-static char *path_direction(int feat)
+static const char *path_direction(int feat)
 {
 	if (feat == FEAT_LESS_NORTH) return "north";
 	if (feat == FEAT_MORE_NORTH) return "north";

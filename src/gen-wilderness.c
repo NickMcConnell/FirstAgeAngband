@@ -593,7 +593,7 @@ static bool check_vault_space(struct chunk *c, struct loc avoid,
  */
 static int make_formation(struct chunk *c, struct player *p, struct loc grid,
 						  int base_feat1, int base_feat2, int *feat,
-						  char *name, int prob)
+						  const char *name, int prob)
 {
 	int step, j, jj, i = 0, total = 0;
 	int *all_feat = mem_zalloc(prob * sizeof(*all_feat));
@@ -804,7 +804,7 @@ static void mtn_connect(struct chunk *c, struct loc grid1, struct loc grid2)
 /**
  * Attempt to place a web of the required type
  */
-bool place_web(struct chunk *c, struct player *p, char *type)
+bool place_web(struct chunk *c, struct player *p, const char *type)
 {
 	struct vault *v;
 	int i;
