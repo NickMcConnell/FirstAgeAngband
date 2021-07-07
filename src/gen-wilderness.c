@@ -95,6 +95,8 @@ static void path_to_nowhere(struct chunk *c, struct loc start,
 		end = grid;
 	} else {
 		/* No good, just finish at the start */
+		assert(square_in_bounds_fully(c, start));
+		end = start;
 		done = true;
 	}
 
@@ -124,9 +126,6 @@ static void path_to_nowhere(struct chunk *c, struct loc start,
 		if ((ABS(grid.x - target.x) < 3) && (ABS(grid.y - target.y) < 3))
 			break;
 	}
-
-	/* Record where we have finished */
-	end = grid;
 
 	/* Store the end */
 	for (j = MAX_PATHS - 1; j >= 0; j--) {
