@@ -915,8 +915,8 @@ struct chunk *plain_gen(struct player *p, int height, int width)
 	/* Place some formations */
 	while (form_grids < (50 * c->depth + 1000)) {
 		/* Choose a place */
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_GRASS, FEAT_GRASS,
 									 form_feats, "Plains", c->depth + 1);
 	}
@@ -924,8 +924,8 @@ struct chunk *plain_gen(struct player *p, int height, int width)
 	/* And some water */
 	form_grids = 0;
 	while (form_grids < 300) {
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_GRASS, FEAT_GRASS, ponds,
 									 "Plains", 10);
 	}
@@ -1110,8 +1110,8 @@ struct chunk *mtn_gen(struct player *p, int height, int width)
 	/* Make a few formations */
 	while (form_grids < 50 * (c->depth)) {
 		/* Choose a place */
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_GRANITE, FEAT_GRANITE,
 									 form_feats, "Mountain", c->depth * 2);
 		/* Now join it up */
@@ -1453,8 +1453,8 @@ struct chunk *forest_gen(struct player *p, int height, int width)
 	/* Place some formations */
 	while (form_grids < (50 * c->depth + 1000)) {
 		/* Choose a place */
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_TREE, FEAT_TREE2,
 									 form_feats, "Forest", c->depth + 1);
 	}
@@ -1462,8 +1462,8 @@ struct chunk *forest_gen(struct player *p, int height, int width)
 	/* And some water */
 	form_grids = 0;
 	while (form_grids < 300) {
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_TREE, FEAT_TREE2, ponds,
 									 "Forest", 10);
 	}
@@ -1533,8 +1533,8 @@ struct chunk *swamp_gen(struct player *p, int height, int width)
 	/* Place some formations (but not many, and less for more danger) */
 	while (form_grids < 20000 / c->depth) {
 		/* Choose a place */
-		grid.y = randint0(c->height - 1) + 1;
-		grid.x = randint0(c->width - 1) + 1;
+		grid.y = randint1(c->height - 2);
+		grid.x = randint1(c->width - 2);
 		form_grids += make_formation(c, p, grid, FEAT_GRASS, FEAT_WATER,
 									 form_feats, "Swamp", c->depth);
 	}
