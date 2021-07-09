@@ -657,12 +657,17 @@ static int make_formation(struct chunk *c, struct player *p, struct loc grid,
 	/* Make a formation */
 	while (i != (prob - 1)) {
 		/* Avoid paths, stay in bounds */
-		if (((square_feat(c, tgrid)->fidx != base_feat1) &&
-			 (square_feat(c, tgrid)->fidx != base_feat2))
-			|| !square_in_bounds_fully(c, tgrid) || square_ismark(c, tgrid)
-			|| square_isvault(c, tgrid)) {
-			mem_free(all_feat);
-			return (total);
+		if (!square_in_bounds_fully(c, tgrid)
+			|| (square_feat(c, tgrid)->fidx != base_feat1
+				&& square_feat(c, tgrid)->fidx != base_feat2)
+			|| square_ismark(c, tgrid)
+			|| square_isvault(c, tgrid)
+			|| loc_eq(tgrid, p->grid)
+			|| (!feat_is_monster_walkable(all_feat[i])
+				&& square_monster(c, tgrid))
+			|| (!feat_is_object_holding(all_feat[i])
+				&& square_object(c, tgrid))) {
+			break;
 		}
 
 		/* Check for treasure */
