@@ -442,7 +442,13 @@ static void make_edges(struct chunk *c, bool ragged, bool valley)
 	/* Prepare places for down slides */
 	num += randint0(2);
 	for (i = 0; i < num; i++)
-		path_x[i] =	1 + randint0(c->width / num - 2) + i * c->width / num;
+		/*
+		 * Skip first and last ten columns to avoid surrounding the
+		 * slide in permanent walls.  Avoid last two columns in each
+		 * interval to limit the possibility of nearby slides.
+		 */
+		path_x[i] = 10 + randint0((c->width - 20) / num - 2)
+			+ (i * (c->width - 20)) / num;
 
 	/* Special boundary walls -- Top */
 	i = (valley ? 5 : 4);
@@ -496,6 +502,8 @@ static void make_edges(struct chunk *c, bool ragged, bool valley)
 			if ((j < num) && valley)
 				if (grid.x == path_x[j]) {
 					square_set_feat(c, grid, FEAT_MORE_SOUTH);
+					/* Mark so it won't be overwritten. */
+					square_mark(c, grid);
 					j++;
 				}
 		} else {
