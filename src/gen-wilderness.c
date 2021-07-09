@@ -1929,8 +1929,26 @@ struct chunk *valley_gen(struct player *p, int height, int width)
 	}
 
 	if (!p->upkeep->path_coord) {
-		grid.y = c->height / 2 - 10 + randint0(20);
-		grid.x = c->width / 2 - 15 + randint0(30);
+		/* Try to find an appropriate space. */
+		j = 0;
+		while (1) {
+			if (j >= 100) {
+				/*
+				 * Give up; let the caller retry from scratch.
+				 */
+				wipe_mon_list(c, p);
+				cave_free(c);
+				return NULL;
+			}
+			grid.y = c->height / 2 - 10 + randint0(20);
+			grid.x = c->width / 2 - 15 + randint0(30);
+			if (!square_isvault(c, grid)
+					&& !square_monster(c, grid)
+					&& !square_object(c, grid)) {
+				break;
+			}
+			++j;
+		}
 		square_set_feat(c, grid, FEAT_GRASS);
 		player_place(c, p, grid);
 		p->upkeep->path_coord = 0;
