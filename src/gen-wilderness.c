@@ -582,6 +582,43 @@ static bool check_vault_space(struct chunk *c, struct loc avoid,
 }
 
 /**
+ * Help make_formation():  test if adding blocking terrain to a grid could
+ * disconnect regions.  The test is local and only tests for conditions that
+ * are sufficient but not guaranteed (since that requires looking at the
+ * entire cave) to disconnect regions.
+ * \param c Is the chunk to check.
+ * \param grid Is the grid to check.  Assumed to be fully in bounds.
+ */
+static bool potentially_disconnects(struct chunk *c, struct loc grid)
+{
+	int i, btonb_count = 0;
+	struct loc neighbor;
+	bool last_nonblock;
+
+	neighbor = loc_sum(grid, ddgrid[clockwise_ddd[7]]);
+	last_nonblock = square_ispassable(c, neighbor)
+			|| square_isrubble(c, neighbor);
+	for (i = 0; i < 8; ++i) {
+		neighbor = loc_sum(grid, ddgrid[clockwise_ddd[i]]);
+		if (square_ispassable(c, neighbor)
+				|| square_isrubble(c, neighbor)) {
+			if (!last_nonblock) {
+				++btonb_count;
+			}
+			last_nonblock = true;
+		} else {
+			last_nonblock = false;
+		}
+	}
+	/*
+	 * If no neighbors are nonblocking or all the nonblocking neighbors
+	 * will still be a contiguous group when the center is blocking, then
+	 * there's no possibility of a disconnect.
+	 */
+	return btonb_count > 1;
+}
+
+/**
  * Make a formation - a randomish group of terrain squares. -NRM-
  * Care probably needed with declaring feat[].
  *
@@ -666,7 +703,10 @@ static int make_formation(struct chunk *c, struct player *p, struct loc grid,
 			|| (!feat_is_monster_walkable(all_feat[i])
 				&& square_monster(c, tgrid))
 			|| (!feat_is_object_holding(all_feat[i])
-				&& square_object(c, tgrid))) {
+				&& square_object(c, tgrid))
+			|| (!feat_is_passable(all_feat[i])
+				&& all_feat[i] != FEAT_RUBBLE
+				&& potentially_disconnects(c, tgrid))) {
 			break;
 		}
 
