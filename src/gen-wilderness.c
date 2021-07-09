@@ -495,7 +495,7 @@ static void make_edges(struct chunk *c, bool ragged, bool valley)
 			for (grid.y = c->height - 1; grid.y > c->height - 1 - i; grid.y--) {
 				/* Clear previous contents, add perma-wall or void */
 				if (!square_ismark(c, grid)) {
-					square_set_feat(c, grid, (valley ? FEAT_VOID : FEAT_PERM));
+					square_set_feat(c, grid, (valley && grid.y != c->height - 1) ? FEAT_VOID : FEAT_PERM);
 				}
 			}
 			/* Down slides */
