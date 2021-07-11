@@ -170,7 +170,7 @@ static void river_move(struct chunk *c, int *xp)
 static void alloc_paths(struct chunk *c, struct player *p, int place,
 						int last_place)
 {
-	int dir, i, j, num, path, coord;
+	int dir, i, j, num, path, back, coord;
 	int pcoord = player->upkeep->path_coord;
 	struct loc grid, pgrid, tgrid;
 
@@ -238,6 +238,7 @@ static void alloc_paths(struct chunk *c, struct player *p, int place,
 			if (river && dirs[dir].river_special)
 				river_move(c, &pcoord);
 
+			back = pcoord;
 			if (dirs[dir].vert) {
 				pgrid = loc(dirs[dir].coord, pcoord);
 				tgrid = loc(
@@ -262,6 +263,8 @@ static void alloc_paths(struct chunk *c, struct player *p, int place,
 			jumped = false;
 
 			path_to_nowhere(c, pgrid, tgrid, pathend, &num_paths);
+		} else {
+			back = -2;
 		}
 
 		/* Decide number of paths */
@@ -280,6 +283,9 @@ static void alloc_paths(struct chunk *c, struct player *p, int place,
 			/* No paths in river */
 			if (river && dirs[dir].river_special)
 				river_move(c, &coord);
+
+			/* Skip if too close to the way back. */
+			if (ABS(coord - back) < 3) continue;
 
 			if (dirs[dir].vert) {
 				grid = loc(dirs[dir].coord, coord);
