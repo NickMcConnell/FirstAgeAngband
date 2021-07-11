@@ -91,7 +91,8 @@ static void path_to_nowhere(struct chunk *c, struct loc start,
 	grid = loc_sum(start, direction);
 	if (square_in_bounds_fully(c, grid)) {
 		/* Take a step */
-		square_set_feat(c, grid, FEAT_ROAD);
+		if (!square_ismark(c, grid))
+			square_set_feat(c, grid, FEAT_ROAD);
 		end = grid;
 	} else {
 		/* No good, just finish at the start */
@@ -106,7 +107,8 @@ static void path_to_nowhere(struct chunk *c, struct loc start,
 		adjust_dir(&direction, grid, target);
 		grid = loc_sum(grid, direction);
 		if (square_in_bounds_fully(c, grid)) {
-			square_set_feat(c, grid, FEAT_ROAD);
+			if (!square_ismark(c, grid))
+				square_set_feat(c, grid, FEAT_ROAD);
 			end = grid;
 		} else {
 			break;
@@ -116,7 +118,8 @@ static void path_to_nowhere(struct chunk *c, struct loc start,
 		correct_dir(&direction, grid, target);
 		grid = loc_sum(grid, direction);
 		if (square_in_bounds_fully(c, grid)) {
-			square_set_feat(c, grid, FEAT_ROAD);
+			if (!square_ismark(c, grid))
+				square_set_feat(c, grid, FEAT_ROAD);
 			end = grid;
 		} else {
 			break;
@@ -335,10 +338,13 @@ static void alloc_paths(struct chunk *c, struct player *p, int place,
 		/* Make the path, adding an adjacent grid 8/9 of the time */
 		for (j = 0; j < path_grids; j++) {
 			struct loc offset = loc(randint0(3) - 1, randint0(3) - 1);
-			square_set_feat(c, gp[j], FEAT_ROAD);
+			if (!square_ismark(c, gp[j])) {
+				square_set_feat(c, gp[j], FEAT_ROAD);
+			}
 			grid = loc_sum(gp[j], offset);
-			if (square_in_bounds_fully(c, grid)) {
-				square_set_feat(c, loc_sum(gp[j], offset), FEAT_ROAD);
+			if (square_in_bounds_fully(c, grid)
+					&& !square_ismark(c, grid)) {
+				square_set_feat(c, grid, FEAT_ROAD);
 			}
 		}
 	}
@@ -775,10 +781,11 @@ static void mtn_connect(struct chunk *c, struct loc grid1, struct loc grid2)
 	/* Find the shortest path */
 	path_grids = project_path(c, gp, 512, grid1, grid2, PROJECT_ROCK);
 
-	/* Make the path, adding an adjacent grid 8/9 of the time */
+	/* Make the path */
 	for (j = 0; j < path_grids; j++) {
-		if ((square_feat(c, gp[j])->fidx == FEAT_ROAD) ||
-			(!square_in_bounds_fully(c, gp[j])))
+		if (!square_in_bounds_fully(c, gp[j])
+				|| square_feat(c, gp[j])->fidx == FEAT_ROAD
+				|| square_ismark(c, gp[j]))
 			break;
 		square_set_feat(c, gp[j], FEAT_ROAD);
 		square_mark(c, gp[j]);
