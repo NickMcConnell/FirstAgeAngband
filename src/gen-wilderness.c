@@ -1182,12 +1182,6 @@ struct chunk *mtn_gen(struct player *p, int height, int width)
 	for (grid.y = 0; grid.y < c->height; grid.y++) {
 		for (grid.x = 0; grid.x < c->width; grid.x++) {
 			square_unmark(c, grid);
-
-			/* Paranoia - remake the dungeon walls */
-			if ((grid.y == 0) || (grid.x == 0) ||
-				(grid.y == c->height - 1) || (grid.x == c->width - 1)) {
-				square_set_feat(c, grid, FEAT_PERM);
-			}
 		}
 	}
 	ensure_connectedness(c, false);
