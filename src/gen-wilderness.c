@@ -1041,6 +1041,7 @@ struct chunk *mtn_gen(struct player *p, int height, int width)
 			if ((square_feat(c, grid)->fidx == FEAT_ROAD) ||
 				(square_feat(c, grid)->fidx == FEAT_GRASS)) {
 				square_set_feat(c, grid, FEAT_MORE);
+				square_mark(c, grid);
 				i--;
 				stairs[2 - i] = grid;
 				if (!i && (level_topography(last_place) == TOP_CAVE))
