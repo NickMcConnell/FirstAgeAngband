@@ -1250,8 +1250,10 @@ struct chunk *mtntop_gen(struct player *p, int height, int width)
 
 	/* Summit */
 	square_set_feat(c, top, FEAT_GRANITE);
+	square_mark(c, top);
 	for (i = 0; i < 8; i++) {
 		square_set_feat(c, loc_sum(top, ddgrid[i]), FEAT_GRANITE);
+		square_mark(c, loc_sum(top, ddgrid[i]));
 	}
 
 	/* Count the floors */
