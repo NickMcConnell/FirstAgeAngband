@@ -500,6 +500,32 @@ static void make_edges(struct chunk *c, bool ragged, bool valley)
 }
 
 /**
+ * Check whether the is space for a clearing with the given corners.
+ */
+static bool check_clearing_space(struct chunk *c, struct loc top_left,
+		struct loc bottom_right)
+{
+	struct loc grid;
+
+	/* Require corners to be in bounds */
+	if (!square_in_bounds(c, top_left)) return false;
+	if (!square_in_bounds(c, bottom_right)) return false;
+
+	/*
+	 * Check every square within the bounds (starburst rooms go up to
+	 * but do not include the bounds)
+	 */
+	for (grid.y = top_left.y + 1; grid.y < bottom_right.y; grid.y++) {
+		for (grid.x = top_left.x + 1; grid.x < bottom_right.x; grid.x++) {
+			if (square_ispath(c, grid)) return false;
+			if (square_ismark(c, grid)) return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * Check whether there is space for a wilderness vault with the given corners
  */
 static bool check_vault_space(struct chunk *c, struct loc avoid,
@@ -978,8 +1004,6 @@ struct chunk *plain_gen(struct player *p, int height, int width)
  */
 struct chunk *mtn_gen(struct player *p, int height, int width)
 {
-	bool made_plat;
-
 	struct loc grid;
 	int i, j;
 	int plats;
@@ -997,8 +1021,8 @@ struct chunk *mtn_gen(struct player *p, int height, int width)
 
 	bool amon_rudh = false;
 
-    /* Make the level */
-    struct chunk *c = cave_new(z_info->dungeon_hgt, z_info->dungeon_wid);
+	/* Make the level */
+	struct chunk *c = cave_new(z_info->dungeon_hgt, z_info->dungeon_wid);
 	c->depth = p->depth;
 
 	/* Start with grass (lets paths work -NRM-) */
@@ -1107,28 +1131,27 @@ struct chunk *mtn_gen(struct player *p, int height, int width)
 		/* Try for a plateau */
 		a = randint0(6) + 4;
 		b = randint0(5) + 4;
-		y = randint0(c->height - 1) + 1;
-		x = randint0(c->width - 1) + 1;
-		made_plat =	generate_starburst_room(c, y - b, x - a, y + b, x + a,
-											false, FEAT_GRASS, true);
+		y = rand_range(b, c->height - 1 - b);
+		x = rand_range(a, c->width - 1 - a);
+		if (!check_clearing_space(c, loc_sum(loc(x, y), loc(-a, -b)),
+				loc_sum(loc(x, y), loc(a, b)))
+				|| !generate_starburst_room(c, y - b, x - a,
+				y + b, x + a, false, FEAT_GRASS, true)) continue;
 
-		/* Success ? */
-		if (made_plat) {
-			grid = loc(x, y);
-			plats--;
+		/* Success */
+		grid = loc(x, y);
+		plats--;
 
-			/* Now join it up */
-			min = c->width + c->height;
-			for (i = 0; i < 20; i++) {
-				dist = distance(grid, pathpoints[i]);
-				if (dist < min) {
-					min = dist;
-					nearest_point = pathpoints[i];
-				}
+		/* Now join it up */
+		min = c->width + c->height;
+		for (i = 0; i < 20; i++) {
+			dist = distance(grid, pathpoints[i]);
+			if (dist < min) {
+				min = dist;
+				nearest_point = pathpoints[i];
 			}
-			mtn_connect(c, grid, nearest_point);
 		}
-
+		mtn_connect(c, grid, nearest_point);
 
 		/* Done ? */
 		if (!plats)
